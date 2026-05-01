@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Help</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+    <h1>Emergency Support</h1>
+    <p>You are not alone. Reach out.</p>
+</header>
+
+<section class="test-container">
+
+    <div class="question">
+        <h2>Trusted Contact</h2>
+
+        <input type="text" id="contactName" placeholder="Enter contact name">
+
+        <input type="tel" id="contactNumber" placeholder="Enter contact number">
+
+        <button onclick="saveEmergencyContact()">Save Contact</button>
+    </div>
+
+    <div class="question">
+        <h2>Your Saved Contact</h2>
+
+        <p id="savedContact"></p>
+
+        <a id="callButton" href="#">Call Now</a>
+    </div>
+
+    <div class="question">
+        <h2>Mental Health Helpline</h2>
+
+        <p>National Mental Health Helpline (India)</p>
+        <p>📞 14416</p>
+    </div>
+
+</section>
+
+<script src="../script.js"></script>
+</body>
+</html>

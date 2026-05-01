@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+<header>
+    <h1>Personal Journal</h1>
+    <p>Write your thoughts and feelings</p>
+</header>
+
+<section class="test-container">
+
+    <div class="question">
+        <textarea id="journalEntry" placeholder="Write here..."></textarea>
+    </div>
+
+    <button onclick="saveJournal()">Save Entry</button>
+
+    <h2>Previous Entries</h2>
+
+    <div id="journalHistory"></div>
+
+</section>
+
+<script src="../script.js"></script>
+</body>
+</html>

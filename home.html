@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MindCare - Student Mental Wellness</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <script>
+    let user = localStorage.getItem("mindcareUser");
+
+    if (!user) {
+        window.location.href = "index.html";
+    }
+</script>
+
+<nav class="navbar">
+    <div></div>
+    <button onclick="logoutUser()">Logout</button>
+</nav>
+    <header>
+        <h1>MindCare</h1>
+        <p>Enhancing Mental Well-Being and Stress Management for Students</p>
+    </header>
+
+    <section class="hero">
+    <h2 id="welcomeUser">Welcome</h2>
+    <p>Your mental wellness journey starts here.</p>
+</section>
+
+    <section class="features">
+        <a href="pages/stress-test.html">Stress Test</a>
+        <a href="pages/mood-tracker.html">Mood Tracker</a>
+        <a href="pages/breathing.html">Breathing Exercise</a>
+        <a href="pages/journal.html">Journal</a>
+        <a href="pages/emergency.html">Emergency Help</a>
+    </section>
+
+   <script src="script.js"></script>
+
+</body>
+</html>

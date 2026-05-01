@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stress Test</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+
+    <header>
+        <h1>Stress Level Test</h1>
+        <p>Answer honestly to know your stress level</p>
+    </header>
+
+    <section class="test-container">
+
+        <div class="question">
+            <p>1. Do you feel overwhelmed with studies?</p>
+            <select id="q1">
+                <option value="0">Select</option>
+                <option value="1">Rarely</option>
+                <option value="2">Sometimes</option>
+                <option value="3">Often</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>2. Are you having trouble sleeping?</p>
+            <select id="q2">
+                <option value="0">Select</option>
+                <option value="1">Rarely</option>
+                <option value="2">Sometimes</option>
+                <option value="3">Often</option>
+            </select>
+        </div>
+
+        <div class="question">
+            <p>3. Do you feel anxious before exams?</p>
+            <select id="q3">
+                <option value="0">Select</option>
+                <option value="1">Rarely</option>
+                <option value="2">Sometimes</option>
+                <option value="3">Often</option>
+            </select>
+        </div>
+
+        <button onclick="calculateStress()">Check Result</button>
+
+        <h2 id="result"></h2>
+
+    </section>
+
+<script src="../script.js"></script>
+</body>
+</html>
