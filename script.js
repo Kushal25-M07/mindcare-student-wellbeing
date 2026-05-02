@@ -16,6 +16,16 @@ function calculateStress() {
     }
 
     document.getElementById("result").innerText = result;
+
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (user) {
+        localStorage.setItem("stress_" + user.email, JSON.stringify({
+            result: result,
+            total: total,
+            date: formatDateKey(new Date())
+        }));
+    }
 }
 function saveMood() {
     let mood = document.getElementById("mood").value;
@@ -338,6 +348,89 @@ function displayEmergencyContact() {
         callButton.href = "tel:" + contact.number;
     }
 }
+
+function getMoodValue(moodText) {
+    if (!moodText) return 60;
+
+    if (moodText.includes("Happy")) return 100;
+    if (moodText.includes("Calm")) return 90;
+    if (moodText.includes("Neutral")) return 70;
+    if (moodText.includes("Sad")) return 45;
+    if (moodText.includes("Stressed")) return 30;
+    if (moodText.includes("Angry")) return 25;
+
+    return 60;
+}
+
+function getUniqueDatedEntries(entries) {
+    let dates = new Set();
+
+    entries.forEach(function(entry) {
+        if (entry.date) {
+            dates.add(entry.date.split(",")[0]);
+        }
+    });
+
+    return dates.size;
+}
+
+function getStressScore(stressData) {
+    if (!stressData || !stressData.result) return 70;
+
+    if (stressData.result.includes("Low")) return 100;
+    if (stressData.result.includes("Moderate")) return 65;
+    if (stressData.result.includes("High")) return 30;
+
+    return 70;
+}
+
+function getWellnessLevel(score) {
+    if (score >= 80) return "Strong";
+    if (score >= 60) return "Balanced";
+    if (score >= 40) return "Needs care";
+
+    return "Needs support";
+}
+
+function updateWellnessScore(user, moods, journals) {
+    const scoreElement = document.getElementById("wellnessScore");
+    const ring = document.getElementById("wellnessRing");
+    const moodStability = document.getElementById("moodStability");
+    const stressStatus = document.getElementById("stressStatus");
+    const focusHabit = document.getElementById("focusHabit");
+
+    if (!scoreElement || !ring || !moodStability || !stressStatus || !focusHabit) return;
+
+    const recentMoods = moods.slice(-7);
+    const moodAverage = recentMoods.length
+        ? recentMoods.reduce(function(total, mood) {
+            return total + getMoodValue(getMoodText(mood));
+        }, 0) / recentMoods.length
+        : 60;
+    const moodScore = Math.round(moodAverage);
+    const journalScore = Math.min(100, Math.round((getUniqueDatedEntries(journals) / 5) * 100));
+    const focusStats = getFocusStats();
+    const focusScore = Math.min(100, focusStats.completed * 25);
+    const stressData = JSON.parse(localStorage.getItem("stress_" + user.email)) || null;
+    const stressScore = getStressScore(stressData);
+    const wellnessScore = Math.round(
+        moodScore * 0.4 +
+        journalScore * 0.2 +
+        focusScore * 0.2 +
+        stressScore * 0.2
+    );
+
+    scoreElement.innerText = wellnessScore + "%";
+    ring.style.setProperty("--score", wellnessScore * 3.6 + "deg");
+    ring.classList.remove("low", "medium", "high");
+    ring.classList.add(wellnessScore >= 75 ? "high" : wellnessScore >= 50 ? "medium" : "low");
+
+    moodStability.innerText = recentMoods.length ? getWellnessLevel(moodScore) : "Not enough data";
+    stressStatus.innerText = stressData ? stressData.result.replace(/[^\w\s]/g, "").trim() : "Not recorded";
+    focusHabit.innerText = focusStats.completed > 0
+        ? focusStats.completed + " session" + (focusStats.completed === 1 ? "" : "s") + " today"
+        : "No sessions yet";
+}
 function loginUser() {
     let username = document.getElementById("username").value.trim();
     let email = document.getElementById("email").value.trim();
@@ -448,6 +541,8 @@ function loadDashboard() {
     if (latestMood && moods.length > 0) {
         latestMood.innerText = getMoodText(moods[moods.length - 1]);
     }
+
+    updateWellnessScore(user, moods, journals);
 }
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
@@ -465,6 +560,12 @@ function loadTheme() {
     if (theme === "dark") {
         document.body.classList.add("dark-mode");
     }
+}
+
+function getFocusStatsKey() {
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    return user ? "mindcareFocusStats_" + user.email : "mindcareFocusStats";
 }
 
 const focusDurations = {
@@ -487,7 +588,8 @@ function formatFocusTime(seconds) {
 
 function getFocusStats() {
     let today = new Date().toDateString();
-    let stats = JSON.parse(localStorage.getItem("mindcareFocusStats")) || {
+    let key = getFocusStatsKey();
+    let stats = JSON.parse(localStorage.getItem(key)) || JSON.parse(localStorage.getItem("mindcareFocusStats")) || {
         date: today,
         completed: 0,
         streak: 0
@@ -499,14 +601,14 @@ function getFocusStats() {
             completed: 0,
             streak: stats.streak || 0
         };
-        localStorage.setItem("mindcareFocusStats", JSON.stringify(stats));
+        localStorage.setItem(key, JSON.stringify(stats));
     }
 
     return stats;
 }
 
 function saveFocusStats(stats) {
-    localStorage.setItem("mindcareFocusStats", JSON.stringify(stats));
+    localStorage.setItem(getFocusStatsKey(), JSON.stringify(stats));
 }
 
 function updateFocusStats() {

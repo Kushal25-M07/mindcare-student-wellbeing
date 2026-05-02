@@ -454,6 +454,94 @@ header p{
     font-size:1.3rem;
 }
 
+.wellness-score-card{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:22px;
+    align-items:center;
+    background:
+        radial-gradient(circle at 12% 0%, rgba(237,233,254,0.9), transparent 16rem),
+        radial-gradient(circle at 100% 15%, rgba(204,251,241,0.72), transparent 14rem),
+        rgba(255,255,255,0.94);
+}
+
+.wellness-score-ring{
+    --score:0deg;
+    --score-color:#8b5cf6;
+    display:grid;
+    place-items:center;
+    width:170px;
+    height:170px;
+    margin:0 auto;
+    border-radius:50%;
+    background:
+        radial-gradient(circle at center, rgba(255,255,255,0.98) 0 58%, transparent 59%),
+        conic-gradient(var(--score-color) var(--score), rgba(226,232,240,0.88) 0deg);
+    box-shadow:0 22px 50px rgba(124,58,237,0.16);
+    transition:background 0.4s ease, box-shadow 0.4s ease;
+}
+
+.wellness-score-ring span{
+    color:#273049;
+    font-size:2.35rem;
+    font-weight:700;
+    line-height:1;
+}
+
+.wellness-score-ring.high{
+    --score-color:#14b8a6;
+}
+
+.wellness-score-ring.medium{
+    --score-color:#8b5cf6;
+}
+
+.wellness-score-ring.low{
+    --score-color:#f97316;
+}
+
+.wellness-score-content h2{
+    margin:8px 0 0;
+    color:#243047;
+    font-size:1.6rem;
+}
+
+.wellness-score-content p{
+    margin:10px 0 0;
+    color:#64748b;
+}
+
+.wellness-metrics{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:14px;
+    margin:20px 0;
+}
+
+.wellness-metric{
+    padding:20px;
+    border:1px solid rgba(255,255,255,0.72);
+    border-radius:22px;
+    background:rgba(255,255,255,0.7);
+    box-shadow:0 14px 34px rgba(111,124,154,0.12);
+}
+
+.wellness-metric small{
+    display:block;
+    color:#7c6fb0;
+    font-size:0.76rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+}
+
+.wellness-metric strong{
+    display:block;
+    margin-top:8px;
+    color:#273049;
+    font-size:1.15rem;
+}
+
 select,
 input,
 textarea{
@@ -1323,6 +1411,30 @@ li,
     border-color:#334155;
 }
 
+.dark-mode .wellness-score-card,
+.dark-mode .wellness-metric{
+    color:var(--text);
+    background:rgba(30,41,59,0.72);
+    border-color:rgba(148,163,184,0.24);
+    box-shadow:0 20px 54px rgba(0,0,0,0.24);
+}
+
+.dark-mode .wellness-score-content h2,
+.dark-mode .wellness-score-ring span,
+.dark-mode .wellness-metric strong{
+    color:var(--text);
+}
+
+.dark-mode .wellness-score-content p{
+    color:var(--muted);
+}
+
+.dark-mode .wellness-score-ring{
+    background:
+        radial-gradient(circle at center, rgba(30,41,59,0.98) 0 58%, transparent 59%),
+        conic-gradient(var(--score-color) var(--score), rgba(51,65,85,0.9) 0deg);
+}
+
 .dark-mode input,
 .dark-mode textarea,
 .dark-mode select{
@@ -1592,6 +1704,10 @@ li,
         border-radius:20px;
     }
 
+    .wellness-score-card{
+        text-align:center;
+    }
+
     button,
     #callButton{
         width:100%;
@@ -1628,6 +1744,15 @@ li,
         grid-template-columns:1fr minmax(220px, 280px);
         align-items:stretch;
         padding:36px;
+    }
+
+    .wellness-score-card{
+        grid-template-columns:190px 1fr;
+        text-align:left;
+    }
+
+    .wellness-metrics{
+        grid-template-columns:repeat(3, minmax(0, 1fr));
     }
 
     .mood-grid{
