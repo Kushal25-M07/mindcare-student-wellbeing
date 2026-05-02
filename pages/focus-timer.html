@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Focus Timer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode"><span class="theme-icon" aria-hidden="true"></span></button>
+    </nav>
+
+    <main class="focus-page">
+        <section class="focus-card">
+            <div class="focus-heading">
+                <span class="eyebrow">Student Focus</span>
+                <h1>Pomodoro Timer</h1>
+                <p>Protect a calm block of study time, then take a mindful reset.</p>
+            </div>
+
+            <div class="focus-tabs" role="tablist" aria-label="Focus timer modes">
+                <button class="focus-mode active" type="button" data-mode="pomodoro">Pomodoro</button>
+                <button class="focus-mode" type="button" data-mode="short">Short Break</button>
+                <button class="focus-mode" type="button" data-mode="long">Long Break</button>
+            </div>
+
+            <div class="timer-ring" aria-label="Timer progress">
+                <div class="ring-progress" id="focusProgress"></div>
+                <div class="timer-face">
+                    <span id="focusModeLabel">Pomodoro</span>
+                    <h2 id="focusTime">25:00</h2>
+                    <p id="focusMessage">Ready when you are.</p>
+                </div>
+            </div>
+
+            <div class="focus-controls">
+                <button type="button" onclick="startFocusTimer()">Start</button>
+                <button type="button" onclick="pauseFocusTimer()">Pause</button>
+                <button type="button" onclick="resetFocusTimer()">Reset</button>
+            </div>
+        </section>
+
+        <section class="focus-stats" aria-label="Focus statistics">
+            <div>
+                <small>Completed today</small>
+                <strong id="focusCompleted">0</strong>
+            </div>
+            <div>
+                <small>Focus streak</small>
+                <strong id="focusStreak">0</strong>
+            </div>
+        </section>
+    </main>
+
+    <script src="../script.js"></script>
+</body>
+</html>

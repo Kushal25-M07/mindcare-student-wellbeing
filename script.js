@@ -445,3 +445,221 @@ function loadTheme() {
     }
 }
 
+const focusDurations = {
+    pomodoro: 25 * 60,
+    short: 5 * 60,
+    long: 15 * 60
+};
+
+let focusMode = "pomodoro";
+let focusTimeLeft = focusDurations.pomodoro;
+let focusTimerInterval;
+let focusIsRunning = false;
+
+function formatFocusTime(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    let remainingSeconds = seconds % 60;
+
+    return String(minutes).padStart(2, "0") + ":" + String(remainingSeconds).padStart(2, "0");
+}
+
+function getFocusStats() {
+    let today = new Date().toDateString();
+    let stats = JSON.parse(localStorage.getItem("mindcareFocusStats")) || {
+        date: today,
+        completed: 0,
+        streak: 0
+    };
+
+    if (stats.date !== today) {
+        stats = {
+            date: today,
+            completed: 0,
+            streak: stats.streak || 0
+        };
+        localStorage.setItem("mindcareFocusStats", JSON.stringify(stats));
+    }
+
+    return stats;
+}
+
+function saveFocusStats(stats) {
+    localStorage.setItem("mindcareFocusStats", JSON.stringify(stats));
+}
+
+function updateFocusStats() {
+    const completed = document.getElementById("focusCompleted");
+    const streak = document.getElementById("focusStreak");
+
+    if (!completed || !streak) return;
+
+    const stats = getFocusStats();
+
+    completed.innerText = stats.completed;
+    streak.innerText = stats.streak;
+}
+
+function updateFocusDisplay() {
+    const time = document.getElementById("focusTime");
+    const label = document.getElementById("focusModeLabel");
+    const progress = document.getElementById("focusProgress");
+    const message = document.getElementById("focusMessage");
+
+    if (!time || !label || !progress || !message) return;
+
+    const modeLabels = {
+        pomodoro: "Pomodoro",
+        short: "Short Break",
+        long: "Long Break"
+    };
+
+    const total = focusDurations[focusMode];
+    const elapsed = total - focusTimeLeft;
+    const degrees = total > 0 ? (elapsed / total) * 360 : 0;
+
+    time.innerText = formatFocusTime(focusTimeLeft);
+    time.classList.remove("tick");
+    void time.offsetWidth;
+    time.classList.add("tick");
+    label.innerText = modeLabels[focusMode];
+    progress.style.setProperty("--progress", degrees + "deg");
+
+    if (!focusIsRunning && focusTimeLeft === total) {
+        message.innerText = focusMode === "pomodoro" ? "Ready when you are." : "Enjoy the reset.";
+    }
+}
+
+function switchFocusMode(mode) {
+    if (!focusDurations[mode]) return;
+
+    clearInterval(focusTimerInterval);
+    focusIsRunning = false;
+    focusMode = mode;
+    focusTimeLeft = focusDurations[mode];
+
+    document.querySelectorAll(".focus-mode").forEach(function(button) {
+        button.classList.toggle("active", button.dataset.mode === mode);
+    });
+
+    const focusCard = document.querySelector(".focus-card");
+
+    if (focusCard) {
+        focusCard.classList.remove("complete");
+    }
+
+    updateFocusDisplay();
+}
+
+function completeFocusSession() {
+    clearInterval(focusTimerInterval);
+    focusIsRunning = false;
+    focusTimeLeft = 0;
+
+    const message = document.getElementById("focusMessage");
+    const focusCard = document.querySelector(".focus-card");
+
+    if (message) {
+        message.innerText = focusMode === "pomodoro" ? "Great work. Take a kind break." : "Break complete. You are ready.";
+    }
+
+    if (focusCard) {
+        focusCard.classList.add("complete");
+    }
+
+    if (focusMode === "pomodoro") {
+        const stats = getFocusStats();
+        stats.completed++;
+        stats.streak++;
+        saveFocusStats(stats);
+        updateFocusStats();
+    }
+
+    updateFocusDisplay();
+}
+
+function startFocusTimer() {
+    const time = document.getElementById("focusTime");
+
+    if (!time || focusIsRunning) return;
+
+    if (focusTimeLeft <= 0) {
+        focusTimeLeft = focusDurations[focusMode];
+    }
+
+    focusIsRunning = true;
+
+    const message = document.getElementById("focusMessage");
+    const focusCard = document.querySelector(".focus-card");
+
+    if (message) {
+        message.innerText = focusMode === "pomodoro" ? "Focus gently. One step at a time." : "Breathe, stretch, reset.";
+    }
+
+    if (focusCard) {
+        focusCard.classList.remove("complete");
+    }
+
+    updateFocusDisplay();
+
+    focusTimerInterval = setInterval(function() {
+        focusTimeLeft--;
+
+        if (focusTimeLeft <= 0) {
+            completeFocusSession();
+            return;
+        }
+
+        updateFocusDisplay();
+    }, 1000);
+}
+
+function pauseFocusTimer() {
+    const time = document.getElementById("focusTime");
+
+    if (!time) return;
+
+    clearInterval(focusTimerInterval);
+    focusIsRunning = false;
+
+    const message = document.getElementById("focusMessage");
+
+    if (message && focusTimeLeft > 0) {
+        message.innerText = "Paused. Return when ready.";
+    }
+}
+
+function resetFocusTimer() {
+    const time = document.getElementById("focusTime");
+
+    if (!time) return;
+
+    clearInterval(focusTimerInterval);
+    focusIsRunning = false;
+    focusTimeLeft = focusDurations[focusMode];
+
+    const focusCard = document.querySelector(".focus-card");
+
+    if (focusCard) {
+        focusCard.classList.remove("complete");
+    }
+
+    updateFocusDisplay();
+}
+
+function initializeFocusTimer() {
+    const focusTimer = document.getElementById("focusTime");
+
+    if (!focusTimer) return;
+
+    document.querySelectorAll(".focus-mode").forEach(function(button) {
+        button.addEventListener("click", function() {
+            switchFocusMode(button.dataset.mode);
+        });
+    });
+
+    updateFocusDisplay();
+    updateFocusStats();
+}
+
+initializeFocusTimer();
+
