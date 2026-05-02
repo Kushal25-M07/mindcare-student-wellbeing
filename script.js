@@ -175,6 +175,7 @@ window.onload = function () {
     displayJournals();
     displayEmergencyContact();
     loadDashboard();
+    initializeSOSButton();
 };
 
 let breathingInterval;
@@ -749,6 +750,20 @@ function loadTheme() {
     if (theme === "dark") {
         document.body.classList.add("dark-mode");
     }
+}
+
+function initializeSOSButton() {
+    if (document.querySelector(".sos-button")) return;
+
+    let sosButton = document.createElement("a");
+    let isNestedPage = window.location.pathname.includes("/pages/") || window.location.pathname.includes("\\pages\\");
+
+    sosButton.className = "sos-button";
+    sosButton.href = isNestedPage ? "emergency.html" : "pages/emergency.html";
+    sosButton.setAttribute("aria-label", "Open emergency support");
+    sosButton.innerText = "SOS";
+
+    document.body.appendChild(sosButton);
 }
 
 function getFocusStatsKey() {
