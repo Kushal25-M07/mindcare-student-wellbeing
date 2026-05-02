@@ -24,27 +24,103 @@
     <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode"><span class="theme-icon" aria-hidden="true"></span></button>
     <button onclick="logoutUser()">Logout</button>
 </nav>
-    <header>
-        <h1>MindCare</h1>
-        <p>Enhancing Mental Well-Being and Stress Management for Students</p>
-        <p>Designed by Kushal , Purushotham & Nava Deep</p>
-    </header>
+    <main class="home-dashboard">
+        <section class="dashboard-hero">
+            <div>
+                <span class="eyebrow">MindCare Dashboard</span>
+                <h1 id="welcomeUser">Welcome</h1>
+                <p>Choose a gentle check-in, breathe for a minute, or continue your wellness routine.</p>
+            </div>
+            <a class="hero-score-card" href="pages/dashboard.html">
+                <span>Wellness Score</span>
+                <strong>82</strong>
+                <small>Balanced today</small>
+            </a>
+        </section>
 
-    <section class="hero">
-    <h2 id="welcomeUser">Welcome</h2>
-    <p>Your mental wellness journey starts here.</p>
-</section>
+        <section class="mood-checkin" aria-label="Quick mood check-in">
+            <div class="section-heading">
+                <h2>How are you feeling?</h2>
+                <a href="pages/mood-tracker.html">View mood tracker</a>
+            </div>
+            <div class="mood-grid">
+                <a href="pages/mood-tracker.html" class="mood-card happy">
+                    <span>😊</span>
+                    <strong>Happy</strong>
+                </a>
+                <a href="pages/mood-tracker.html" class="mood-card calm">
+                    <span>😌</span>
+                    <strong>Calm</strong>
+                </a>
+                <a href="pages/mood-tracker.html" class="mood-card sad">
+                    <span>😔</span>
+                    <strong>Low</strong>
+                </a>
+                <a href="pages/mood-tracker.html" class="mood-card stressed">
+                    <span>😣</span>
+                    <strong>Stressed</strong>
+                </a>
+            </div>
+        </section>
 
-    <section class="features">
-        <a href="pages/stress-test.html">Stress Test</a>
-        <a href="pages/mood-tracker.html">Mood Tracker</a>
-        <a href="pages/breathing.html">Breathing Exercise</a>
-        <a href="pages/journal.html">Journal</a>
-        <a href="pages/emergency.html">Emergency Help</a>
-        <a href="pages/chatbot.html">AI Chatbot</a>
-        <a href="pages/dashboard.html">Dashboard</a>
+        <section class="dashboard-grid" aria-label="Wellness shortcuts">
+            <a class="dashboard-card breathing-card" href="pages/breathing.html">
+                <span class="card-icon">🌬️</span>
+                <div>
+                    <h2>Breathing</h2>
+                    <p>Start a calming guided session.</p>
+                </div>
+            </a>
 
-    </section>
+            <a class="dashboard-card journal-card-home" href="pages/journal.html">
+                <span class="card-icon">📝</span>
+                <div>
+                    <h2>Journal</h2>
+                    <p>Write down what is on your mind.</p>
+                </div>
+            </a>
+
+            <a class="dashboard-card chatbot-card" href="pages/chatbot.html">
+                <span class="card-icon">💬</span>
+                <div>
+                    <h2>AI Chatbot</h2>
+                    <p>Talk through feelings and stress.</p>
+                </div>
+            </a>
+
+            <a class="dashboard-card emergency-card" href="pages/emergency.html">
+                <span class="card-icon">🆘</span>
+                <div>
+                    <h2>Emergency Help</h2>
+                    <p>Reach a trusted contact quickly.</p>
+                </div>
+            </a>
+
+            <a class="dashboard-card analytics-card" href="pages/dashboard.html">
+                <div>
+                    <span class="eyebrow">Progress Analytics</span>
+                    <h2>Weekly balance</h2>
+                    <p>Mood, journal, and check-in insights.</p>
+                </div>
+                <div class="mini-chart" aria-hidden="true">
+                    <span style="height:42%"></span>
+                    <span style="height:68%"></span>
+                    <span style="height:52%"></span>
+                    <span style="height:78%"></span>
+                    <span style="height:62%"></span>
+                    <span style="height:88%"></span>
+                </div>
+            </a>
+
+            <a class="dashboard-card score-card" href="pages/stress-test.html">
+                <span class="score-ring">Low</span>
+                <div>
+                    <h2>Stress Test</h2>
+                    <p>Check your current stress level.</p>
+                </div>
+            </a>
+        </section>
+    </main>
 
    <script src="script.js"></script>
 
