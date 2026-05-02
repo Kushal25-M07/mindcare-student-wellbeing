@@ -63,10 +63,12 @@ function displayMoods() {
 }
 
 window.onload = function () {
+    loadTheme();
     displayUserName();
     displayMoods();
     displayJournals();
     displayEmergencyContact();
+    loadDashboard();
 };
 
 let breathingInterval;
@@ -301,3 +303,48 @@ function getBotResponse(input) {
 
     return "I am here for you. Tell me more about how you feel.";
 }
+function loadDashboard() {
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let moods =
+        JSON.parse(localStorage.getItem("moods_" + user.email)) || [];
+
+    let journals =
+        JSON.parse(localStorage.getItem("journals_" + user.email)) || [];
+
+    let totalMoods = document.getElementById("totalMoods");
+    let totalJournals = document.getElementById("totalJournals");
+    let latestMood = document.getElementById("latestMood");
+
+    if (totalMoods) {
+        totalMoods.innerText = moods.length;
+    }
+
+    if (totalJournals) {
+        totalJournals.innerText = journals.length;
+    }
+
+    if (latestMood && moods.length > 0) {
+        latestMood.innerText = moods[moods.length - 1];
+    }
+}
+function toggleDarkMode() {
+    document.body.classList.toggle("dark-mode");
+
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+    } else {
+        localStorage.setItem("theme", "light");
+    }
+}
+
+function loadTheme() {
+    let theme = localStorage.getItem("theme");
+
+    if (theme === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+}
+

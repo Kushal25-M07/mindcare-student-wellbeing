@@ -166,3 +166,32 @@ li{
     border-radius:10px;
     margin-bottom:20px;
 }
+.dark-mode{
+    background:#121212;
+    color:white;
+}
+
+.dark-mode header{
+    background:#1e1e1e;
+}
+
+.dark-mode .question,
+.dark-mode .features a,
+.dark-mode .journal-card,
+.dark-mode .chat-box,
+.dark-mode .circle{
+    background:#222;
+    color:white;
+}
+
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select{
+    background:#333;
+    color:white;
+    border:1px solid #555;
+}
+
+.dark-mode .navbar{
+    background:#1e1e1e;
+}
