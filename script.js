@@ -585,25 +585,97 @@ function logoutUser() {
 
     window.location.href = "index.html";
 }
+function getChatTimestamp() {
+    return new Date().toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+    });
+}
+
+function createChatMessage(sender, message) {
+    let row = document.createElement("div");
+    let bubble = document.createElement("div");
+    let text = document.createElement("p");
+    let time = document.createElement("time");
+
+    row.className = "message-row " + sender;
+    bubble.className = "message-bubble";
+    text.innerText = message;
+    time.innerText = getChatTimestamp();
+
+    bubble.appendChild(text);
+    bubble.appendChild(time);
+    row.appendChild(bubble);
+
+    return row;
+}
+
+function createTypingIndicator() {
+    let row = document.createElement("div");
+    let bubble = document.createElement("div");
+
+    row.className = "message-row bot typing-row";
+    bubble.className = "message-bubble typing-indicator";
+    bubble.innerHTML = "<span></span><span></span><span></span>";
+    row.appendChild(bubble);
+
+    return row;
+}
+
+function scrollChatToLatest() {
+    let chatBox = document.getElementById("chatBox");
+
+    if (chatBox) {
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+}
+
+function useQuickReply(text) {
+    let input = document.getElementById("userInput");
+
+    if (!input) return;
+
+    input.value = text;
+    sendMessage();
+}
+
+function initializeChatbot() {
+    let input = document.getElementById("userInput");
+    let chatBox = document.getElementById("chatBox");
+
+    if (!input || !chatBox) return;
+
+    input.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            sendMessage();
+        }
+    });
+
+    scrollChatToLatest();
+}
+
 function sendMessage() {
     let input = document.getElementById("userInput").value.trim();
     let chatBox = document.getElementById("chatBox");
 
     if (input === "") return;
 
-    let userMessage = document.createElement("p");
-    userMessage.innerHTML = "<strong>You:</strong> " + input;
-    chatBox.appendChild(userMessage);
+    chatBox.appendChild(createChatMessage("user", input));
 
     let botReply = getBotResponse(input);
+    let typingIndicator = createTypingIndicator();
 
-    let botMessage = document.createElement("p");
-    botMessage.innerHTML = "<strong>Bot:</strong> " + botReply;
-    chatBox.appendChild(botMessage);
+    chatBox.appendChild(typingIndicator);
 
     document.getElementById("userInput").value = "";
 
-    chatBox.scrollTop = chatBox.scrollHeight;
+    scrollChatToLatest();
+
+    setTimeout(function() {
+        typingIndicator.remove();
+        chatBox.appendChild(createChatMessage("bot", botReply));
+        scrollChatToLatest();
+    }, 650);
 }
 
 function getBotResponse(input) {
@@ -998,4 +1070,4 @@ function renderMoodCalendar() {
 }
 
 renderMoodCalendar();
-
+initializeChatbot();

@@ -14,20 +14,36 @@
         <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode"><span class="theme-icon" aria-hidden="true"></span></button>
     </nav>
 
-<header>
-    <h1>MindCare Support Chatbot</h1>
-    <p>Talk about how you feel</p>
-</header>
+<main class="chatbot-page">
+    <section class="chatbot-shell">
+        <div class="chatbot-header">
+            <span class="eyebrow">MindCare Chat</span>
+            <h1>Support Chatbot</h1>
+            <p>Share what is on your mind. I will respond with gentle, practical support.</p>
+        </div>
 
-<section class="test-container">
+        <div class="quick-replies" aria-label="Quick replies">
+            <button type="button" onclick="useQuickReply('I feel stressed')">I feel stressed</button>
+            <button type="button" onclick="useQuickReply('Exam anxiety')">Exam anxiety</button>
+            <button type="button" onclick="useQuickReply('Feeling sad')">Feeling sad</button>
+            <button type="button" onclick="useQuickReply('Need motivation')">Need motivation</button>
+        </div>
 
-    <div id="chatBox" class="chat-box"></div>
+        <div id="chatBox" class="chat-box" aria-live="polite">
+            <div class="message-row bot">
+                <div class="message-bubble">
+                    <p>Hello. How are you feeling today?</p>
+                    <time>Now</time>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <input type="text" id="userInput" placeholder="Type your feelings here...">
-
-    <button onclick="sendMessage()">Send</button>
-
-</section>
+    <div class="chat-composer">
+        <input type="text" id="userInput" placeholder="Type your feelings here...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+</main>
 
 <script src="../script.js"></script>
 </body>
