@@ -25,11 +25,17 @@ function saveMood() {
         return;
     }
 
-    let moods = JSON.parse(localStorage.getItem("moods")) || [];
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let key = "moods_" + user.email;
+
+    let moods = JSON.parse(localStorage.getItem(key)) || [];
 
     moods.push(mood);
 
-    localStorage.setItem("moods", JSON.stringify(moods));
+    localStorage.setItem(key, JSON.stringify(moods));
 
     displayMoods();
 }
@@ -39,7 +45,13 @@ function displayMoods() {
 
     if (!moodHistory) return;
 
-    let moods = JSON.parse(localStorage.getItem("moods")) || [];
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let key = "moods_" + user.email;
+
+    let moods = JSON.parse(localStorage.getItem(key)) || [];
 
     moodHistory.innerHTML = "";
 
@@ -110,7 +122,13 @@ function saveJournal() {
         return;
     }
 
-    let journals = JSON.parse(localStorage.getItem("journals")) || [];
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let key = "journals_" + user.email;
+
+    let journals = JSON.parse(localStorage.getItem(key)) || [];
 
     let journalData = {
         text: entry,
@@ -119,7 +137,7 @@ function saveJournal() {
 
     journals.push(journalData);
 
-    localStorage.setItem("journals", JSON.stringify(journals));
+    localStorage.setItem(key, JSON.stringify(journals));
 
     document.getElementById("journalEntry").value = "";
 
@@ -131,7 +149,13 @@ function displayJournals() {
 
     if (!journalHistory) return;
 
-    let journals = JSON.parse(localStorage.getItem("journals")) || [];
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let key = "journals_" + user.email;
+
+    let journals = JSON.parse(localStorage.getItem(key)) || [];
 
     journalHistory.innerHTML = "";
 
@@ -156,12 +180,18 @@ function saveEmergencyContact() {
         return;
     }
 
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let key = "emergencyContact_" + user.email;
+
     let contact = {
         name: name,
         number: number
     };
 
-    localStorage.setItem("emergencyContact", JSON.stringify(contact));
+    localStorage.setItem(key, JSON.stringify(contact));
 
     displayEmergencyContact();
 }
@@ -172,7 +202,13 @@ function displayEmergencyContact() {
 
     if (!savedContact || !callButton) return;
 
-    let contact = JSON.parse(localStorage.getItem("emergencyContact"));
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    let key = "emergencyContact_" + user.email;
+
+    let contact = JSON.parse(localStorage.getItem(key));
 
     if (contact) {
         savedContact.innerText =
@@ -193,14 +229,6 @@ function loginUser() {
     if (!email.includes("@") || !email.includes(".")) {
         alert("Enter a valid email");
         return;
-    }
-
-    let existingUser = JSON.parse(localStorage.getItem("mindcareUser"));
-
-    if (existingUser && existingUser.email !== email) {
-        localStorage.removeItem("moods");
-        localStorage.removeItem("journals");
-        localStorage.removeItem("emergencyContact");
     }
 
     let user = {
