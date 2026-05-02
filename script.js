@@ -50,6 +50,7 @@ function saveMood() {
 
     localStorage.setItem(key, JSON.stringify(moods));
 
+    updateActivityStreak("mood");
     displayMoods();
 }
 
@@ -67,6 +68,79 @@ function formatDateKey(date) {
     let day = String(date.getDate()).padStart(2, "0");
 
     return year + "-" + month + "-" + day;
+}
+
+function getUserStreakKey() {
+    let user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    return user ? "streaks_" + user.email : "";
+}
+
+function getDaysBetween(previousDate, currentDate) {
+    let previous = new Date(previousDate + "T00:00:00");
+    let current = new Date(currentDate + "T00:00:00");
+
+    return Math.round((current - previous) / 86400000);
+}
+
+function getUserStreaks() {
+    let key = getUserStreakKey();
+
+    if (!key) return {};
+
+    return JSON.parse(localStorage.getItem(key)) || {};
+}
+
+function saveUserStreaks(streaks) {
+    let key = getUserStreakKey();
+
+    if (!key) return;
+
+    localStorage.setItem(key, JSON.stringify(streaks));
+}
+
+function updateActivityStreak(activity) {
+    let today = formatDateKey(new Date());
+    let streaks = getUserStreaks();
+    let current = streaks[activity] || {
+        count: 0,
+        lastDate: ""
+    };
+
+    if (current.lastDate === today) {
+        saveUserStreaks(streaks);
+        return current.count;
+    }
+
+    if (current.lastDate && getDaysBetween(current.lastDate, today) === 1) {
+        current.count++;
+    } else {
+        current.count = 1;
+    }
+
+    current.lastDate = today;
+    streaks[activity] = current;
+    saveUserStreaks(streaks);
+
+    return current.count;
+}
+
+function getCurrentActivityStreak(activity) {
+    let today = formatDateKey(new Date());
+    let streaks = getUserStreaks();
+    let current = streaks[activity];
+
+    if (!current || !current.lastDate) return 0;
+
+    let daysBetween = getDaysBetween(current.lastDate, today);
+
+    if (daysBetween <= 1) return current.count;
+
+    current.count = 0;
+    streaks[activity] = current;
+    saveUserStreaks(streaks);
+
+    return 0;
 }
 
 function displayMoods() {
@@ -205,6 +279,7 @@ function startBreathingSession() {
         timer.innerText = timeLeft + " sec";
 
         if (timeLeft <= 0) {
+            updateActivityStreak("breathing");
             stopBreathingSession();
         }
     }, 1000);
@@ -272,6 +347,7 @@ function saveJournal() {
 
     document.getElementById("journalEntry").value = "";
 
+    updateActivityStreak("journal");
     displayJournals();
 }
 
@@ -431,6 +507,46 @@ function updateWellnessScore(user, moods, journals) {
         ? focusStats.completed + " session" + (focusStats.completed === 1 ? "" : "s") + " today"
         : "No sessions yet";
 }
+
+function renderStreakBadges(container, count) {
+    if (!container) return;
+
+    const milestones = [3, 7, 30];
+
+    container.innerHTML = "";
+
+    milestones.forEach(function(milestone) {
+        const badge = document.createElement("span");
+        badge.innerText = milestone + "d";
+
+        if (count >= milestone) {
+            badge.classList.add("active");
+        }
+
+        container.appendChild(badge);
+    });
+}
+
+function updateStreakDashboard() {
+    const streakItems = [
+        { activity: "mood", valueId: "moodStreak", badgesId: "moodStreakBadges" },
+        { activity: "journal", valueId: "journalStreak", badgesId: "journalStreakBadges" },
+        { activity: "breathing", valueId: "breathingStreak", badgesId: "breathingStreakBadges" },
+        { activity: "focus", valueId: "focusSessionStreak", badgesId: "focusSessionStreakBadges" }
+    ];
+
+    streakItems.forEach(function(item) {
+        const value = document.getElementById(item.valueId);
+        const badges = document.getElementById(item.badgesId);
+
+        if (!value) return;
+
+        const count = getCurrentActivityStreak(item.activity);
+
+        value.innerText = count + " day" + (count === 1 ? "" : "s");
+        renderStreakBadges(badges, count);
+    });
+}
 function loginUser() {
     let username = document.getElementById("username").value.trim();
     let email = document.getElementById("email").value.trim();
@@ -543,6 +659,7 @@ function loadDashboard() {
     }
 
     updateWellnessScore(user, moods, journals);
+    updateStreakDashboard();
 }
 function toggleDarkMode() {
     document.body.classList.toggle("dark-mode");
@@ -695,6 +812,7 @@ function completeFocusSession() {
         stats.completed++;
         stats.streak++;
         saveFocusStats(stats);
+        updateActivityStreak("focus");
         updateFocusStats();
     }
 
