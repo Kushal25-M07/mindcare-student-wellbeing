@@ -277,9 +277,17 @@ function startBreathingSession() {
         const pattern = getBreathingPattern();
         const cycleLength = pattern.inhale + pattern.hold + pattern.exhale + pattern.finalHold;
 
+        const progress = document.querySelector(".breath-progress span");
+        if (progress) {
+            progress.style.transition = "none";
+            progress.style.width = "0%";
+            void progress.offsetWidth;
+            progress.style.transition = "";
+            progress.style.width = "";
+        }
+
         breathText.innerText = "Inhale";
         setBreathingPhase("inhale");
-        circle.classList.add("grow");
 
         breathingTimeouts.push(setTimeout(() => {
             breathText.innerText = "Hold";
@@ -289,7 +297,6 @@ function startBreathingSession() {
         breathingTimeouts.push(setTimeout(() => {
             breathText.innerText = "Exhale";
             setBreathingPhase("exhale");
-            circle.classList.remove("grow");
         }, pattern.inhale + pattern.hold));
 
         if (pattern.finalHold > 0) {
@@ -337,10 +344,6 @@ function resetBreathingSession() {
     const circle = document.getElementById("circle");
     const breathText = document.getElementById("breathText");
     const timer = document.getElementById("timer");
-
-    if (circle) {
-        circle.classList.remove("grow");
-    }
 
     if (breathText) {
         breathText.innerText = "Ready";
