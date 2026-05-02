@@ -14,27 +14,64 @@
     <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode"><span class="theme-icon" aria-hidden="true"></span></button>
 </nav>
 
-<header>
-    <h1>Breathing Exercise</h1>
-    <p>Relax your mind with guided breathing</p>
-</header>
+<main class="breathing-page">
+    <section class="breathing-shell">
+        <div class="breathing-copy">
+            <span class="eyebrow">Guided Breathwork</span>
+            <h1>Find your steady rhythm</h1>
+            <p>Follow the circle as it expands, holds, and releases through a calming 60 second session.</p>
+        </div>
 
-<section class="breathing-container">
+        <div class="preset-panel" aria-label="Breathing modes">
+            <label class="preset-chip">
+                <input type="radio" name="breathingMode" value="relax" checked>
+                <span>Relax</span>
+                <small>4-4-4</small>
+            </label>
+            <label class="preset-chip">
+                <input type="radio" name="breathingMode" value="calm">
+                <span>Calm</span>
+                <small>4-7-8</small>
+            </label>
+            <label class="preset-chip">
+                <input type="radio" name="breathingMode" value="focus">
+                <span>Focus</span>
+                <small>Box</small>
+            </label>
+        </div>
 
-    <div class="circle" id="circle">
-        <p id="breathText">Ready</p>
-    </div>
+        <section class="breathing-container" aria-label="Breathing animation">
+            <div class="breath-orbit" aria-hidden="true"></div>
+            <div class="breath-orbit orbit-two" aria-hidden="true"></div>
 
-</section>
+            <div class="circle" id="circle">
+                <p id="breathText">Ready</p>
+                <span>Follow the pulse</span>
+            </div>
+        </section>
 
-<div class="controls">
-    <h2 id="timer">60 sec</h2>
+        <div class="breath-progress" aria-hidden="true">
+            <span></span>
+        </div>
 
-    <button onclick="startBreathingSession()">Start</button>
-    <button onclick="stopBreathingSession()">Stop</button>
-</div>
+        <div class="session-stats">
+            <div class="timer-card">
+                <small>Time remaining</small>
+                <h2 id="timer">60 sec</h2>
+            </div>
+            <div class="timer-card">
+                <small>Total duration</small>
+                <h2>60 sec</h2>
+            </div>
+        </div>
 
-</section>
+        <div class="controls">
+            <button onclick="startBreathingSession()">Start session</button>
+            <button onclick="stopBreathingSession()">Stop session</button>
+            <button onclick="resetBreathingSession()">Reset session</button>
+        </div>
+    </section>
+</main>
 
 <script src="../script.js"></script>
 </body>

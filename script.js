@@ -73,7 +73,53 @@ window.onload = function () {
 
 let breathingInterval;
 let countdownInterval;
+let breathingTimeouts = [];
 let timeLeft = 60;
+
+function getBreathingPattern() {
+    const selectedMode = document.querySelector('input[name="breathingMode"]:checked');
+    const mode = selectedMode ? selectedMode.value : "relax";
+
+    const patterns = {
+        relax: { inhale: 4000, hold: 4000, exhale: 4000, finalHold: 0 },
+        calm: { inhale: 4000, hold: 7000, exhale: 8000, finalHold: 0 },
+        focus: { inhale: 4000, hold: 4000, exhale: 4000, finalHold: 4000 }
+    };
+
+    return patterns[mode] || patterns.relax;
+}
+
+function setBreathingPhase(phase) {
+    const circle = document.getElementById("circle");
+    const progress = document.querySelector(".breath-progress span");
+
+    if (!circle) return;
+
+    circle.classList.remove("inhale", "hold", "exhale", "complete");
+
+    if (phase) {
+        circle.classList.add(phase);
+    }
+
+    if (progress) {
+        progress.classList.remove("inhale", "hold", "exhale", "complete");
+
+        if (phase) {
+            progress.classList.add(phase);
+        }
+    }
+}
+
+function clearBreathingTimers() {
+    clearInterval(breathingInterval);
+    clearInterval(countdownInterval);
+
+    breathingTimeouts.forEach(function(timeout) {
+        clearTimeout(timeout);
+    });
+
+    breathingTimeouts = [];
+}
 
 function startBreathingSession() {
     const circle = document.getElementById("circle");
@@ -82,23 +128,45 @@ function startBreathingSession() {
 
     if (!circle || !breathText || !timer) return;
 
-    function cycleBreathing() {
-        breathText.innerText = "Inhale";
-        circle.classList.add("grow");
+    clearBreathingTimers();
 
-        setTimeout(() => {
-            breathText.innerText = "Hold";
-        }, 4000);
-
-        setTimeout(() => {
-            breathText.innerText = "Exhale";
-            circle.classList.remove("grow");
-        }, 7000);
+    if (timeLeft <= 0) {
+        timeLeft = 60;
+        timer.innerText = timeLeft + " sec";
     }
 
-    cycleBreathing();
+    function cycleBreathing() {
+        const pattern = getBreathingPattern();
+        const cycleLength = pattern.inhale + pattern.hold + pattern.exhale + pattern.finalHold;
 
-    breathingInterval = setInterval(cycleBreathing, 10000);
+        breathText.innerText = "Inhale";
+        setBreathingPhase("inhale");
+        circle.classList.add("grow");
+
+        breathingTimeouts.push(setTimeout(() => {
+            breathText.innerText = "Hold";
+            setBreathingPhase("hold");
+        }, pattern.inhale));
+
+        breathingTimeouts.push(setTimeout(() => {
+            breathText.innerText = "Exhale";
+            setBreathingPhase("exhale");
+            circle.classList.remove("grow");
+        }, pattern.inhale + pattern.hold));
+
+        if (pattern.finalHold > 0) {
+            breathingTimeouts.push(setTimeout(() => {
+                breathText.innerText = "Hold";
+                setBreathingPhase("hold");
+            }, pattern.inhale + pattern.hold + pattern.exhale));
+        }
+
+        return cycleLength;
+    }
+
+    const cycleLength = cycleBreathing();
+
+    breathingInterval = setInterval(cycleBreathing, cycleLength);
 
     countdownInterval = setInterval(() => {
         timeLeft--;
@@ -111,10 +179,39 @@ function startBreathingSession() {
 }
 
 function stopBreathingSession() {
-    clearInterval(breathingInterval);
-    clearInterval(countdownInterval);
+    clearBreathingTimers();
 
-    document.getElementById("breathText").innerText = "Session Complete";
+    const breathText = document.getElementById("breathText");
+
+    if (breathText) {
+        breathText.innerText = "Session Complete";
+    }
+
+    setBreathingPhase("complete");
+}
+
+function resetBreathingSession() {
+    clearBreathingTimers();
+
+    timeLeft = 60;
+
+    const circle = document.getElementById("circle");
+    const breathText = document.getElementById("breathText");
+    const timer = document.getElementById("timer");
+
+    if (circle) {
+        circle.classList.remove("grow");
+    }
+
+    if (breathText) {
+        breathText.innerText = "Ready";
+    }
+
+    if (timer) {
+        timer.innerText = timeLeft + " sec";
+    }
+
+    setBreathingPhase("");
 }
 function saveJournal() {
     let entry = document.getElementById("journalEntry").value;
