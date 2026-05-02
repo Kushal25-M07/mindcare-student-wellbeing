@@ -33,11 +33,30 @@ function saveMood() {
 
     let moods = JSON.parse(localStorage.getItem(key)) || [];
 
-    moods.push(mood);
+    moods.push({
+        mood: mood,
+        date: formatDateKey(new Date())
+    });
 
     localStorage.setItem(key, JSON.stringify(moods));
 
     displayMoods();
+}
+
+function getMoodText(moodEntry) {
+    return typeof moodEntry === "string" ? moodEntry : moodEntry.mood;
+}
+
+function getMoodDate(moodEntry) {
+    return typeof moodEntry === "string" ? "" : moodEntry.date;
+}
+
+function formatDateKey(date) {
+    let year = date.getFullYear();
+    let month = String(date.getMonth() + 1).padStart(2, "0");
+    let day = String(date.getDate()).padStart(2, "0");
+
+    return year + "-" + month + "-" + day;
 }
 
 function displayMoods() {
@@ -57,7 +76,10 @@ function displayMoods() {
 
     moods.forEach(function(mood) {
         let li = document.createElement("li");
-        li.innerText = mood;
+        let moodText = getMoodText(mood);
+        let moodDate = getMoodDate(mood);
+
+        li.innerText = moodDate ? moodText + " - " + moodDate : moodText;
         moodHistory.appendChild(li);
     });
 }
@@ -424,7 +446,7 @@ function loadDashboard() {
     }
 
     if (latestMood && moods.length > 0) {
-        latestMood.innerText = moods[moods.length - 1];
+        latestMood.innerText = getMoodText(moods[moods.length - 1]);
     }
 }
 function toggleDarkMode() {
@@ -662,4 +684,98 @@ function initializeFocusTimer() {
 }
 
 initializeFocusTimer();
+
+function getMoodEmoji(moodText) {
+    if (!moodText) return "";
+
+    if (moodText.includes("Happy")) return "😊";
+    if (moodText.includes("Calm")) return "😌";
+    if (moodText.includes("Sad")) return "😔";
+    if (moodText.includes("Stressed")) return "😣";
+    if (moodText.includes("Angry")) return "😡";
+    if (moodText.includes("Neutral")) return "😐";
+
+    return moodText.split(" ").pop();
+}
+
+function getMoodClass(moodText) {
+    if (!moodText) return "";
+
+    if (moodText.includes("Happy")) return "happy";
+    if (moodText.includes("Calm")) return "calm";
+    if (moodText.includes("Sad")) return "sad";
+    if (moodText.includes("Stressed")) return "stressed";
+    if (moodText.includes("Angry")) return "angry";
+    if (moodText.includes("Neutral")) return "neutral";
+
+    return "";
+}
+
+function renderMoodCalendar() {
+    const grid = document.getElementById("moodCalendarGrid");
+    const monthLabel = document.getElementById("calendarMonth");
+
+    if (!grid || !monthLabel) return;
+
+    const user = JSON.parse(localStorage.getItem("mindcareUser"));
+
+    if (!user) return;
+
+    const moods = JSON.parse(localStorage.getItem("moods_" + user.email)) || [];
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const moodByDate = {};
+
+    moods.forEach(function(entry) {
+        const date = getMoodDate(entry);
+
+        if (date) {
+            moodByDate[date] = getMoodText(entry);
+        }
+    });
+
+    monthLabel.innerText = today.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric"
+    });
+
+    grid.innerHTML = "";
+
+    for (let blank = 0; blank < firstDay.getDay(); blank++) {
+        const emptyCell = document.createElement("div");
+        emptyCell.className = "calendar-day empty";
+        grid.appendChild(emptyCell);
+    }
+
+    for (let day = 1; day <= lastDay.getDate(); day++) {
+        const date = new Date(year, month, day);
+        const dateKey = formatDateKey(date);
+        const moodText = moodByDate[dateKey];
+        const cell = document.createElement("div");
+        const dayNumber = document.createElement("span");
+        const emoji = document.createElement("strong");
+
+        cell.className = "calendar-day";
+        dayNumber.innerText = day;
+        emoji.innerText = getMoodEmoji(moodText);
+
+        if (moodText) {
+            cell.classList.add("has-mood", getMoodClass(moodText));
+            cell.title = moodText;
+        }
+
+        if (dateKey === formatDateKey(today)) {
+            cell.classList.add("today");
+        }
+
+        cell.appendChild(dayNumber);
+        cell.appendChild(emoji);
+        grid.appendChild(cell);
+    }
+}
+
+renderMoodCalendar();
 

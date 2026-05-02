@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Calendar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <button class="theme-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode"><span class="theme-icon" aria-hidden="true"></span></button>
+    </nav>
+
+    <main class="mood-calendar-page">
+        <section class="mood-calendar-shell">
+            <div class="mood-calendar-header">
+                <div>
+                    <span class="eyebrow">Mood Calendar</span>
+                    <h1 id="calendarMonth">Monthly check-in</h1>
+                    <p>Your emotional history, mapped gently across the month.</p>
+                </div>
+                <a href="mood-tracker.html">Add mood</a>
+            </div>
+
+            <div class="calendar-weekdays" aria-hidden="true">
+                <span>Sun</span>
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+            </div>
+
+            <section class="mood-calendar-grid" id="moodCalendarGrid" aria-label="Monthly mood calendar"></section>
+
+            <section class="mood-legend" aria-label="Mood legend">
+                <span><b>😊</b> Happy</span>
+                <span><b>😌</b> Calm</span>
+                <span><b>😐</b> Neutral</span>
+                <span><b>😔</b> Sad</span>
+                <span><b>😣</b> Stressed</span>
+            </section>
+        </section>
+    </main>
+
+    <script src="../script.js"></script>
+</body>
+</html>

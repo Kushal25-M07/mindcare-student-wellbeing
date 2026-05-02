@@ -397,6 +397,10 @@ header p{
     background:linear-gradient(135deg, rgba(237,233,254,0.92), rgba(224,242,254,0.78));
 }
 
+.mood-calendar-card{
+    background:linear-gradient(135deg, rgba(255,228,237,0.9), rgba(219,234,254,0.78));
+}
+
 .score-ring{
     display:grid;
     place-items:center;
@@ -1125,6 +1129,165 @@ li,
     line-height:1;
 }
 
+.mood-calendar-page{
+    width:min(980px, calc(100% - 28px));
+    min-height:100vh;
+    margin:0 auto;
+    padding:92px 0 48px;
+    display:grid;
+    align-content:center;
+}
+
+.mood-calendar-shell{
+    padding:22px;
+    border:1px solid rgba(255,255,255,0.72);
+    border-radius:34px;
+    background:
+        radial-gradient(circle at 18% 0%, rgba(255,214,232,0.78), transparent 17rem),
+        radial-gradient(circle at 100% 8%, rgba(205,230,255,0.76), transparent 16rem),
+        rgba(255,255,255,0.68);
+    box-shadow:0 28px 80px rgba(122,132,173,0.20);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+}
+
+.mood-calendar-header{
+    display:grid;
+    gap:16px;
+    margin-bottom:22px;
+}
+
+.mood-calendar-header h1{
+    margin:10px 0 0;
+    color:#273049;
+    font-size:clamp(2rem, 9vw, 3.6rem);
+    line-height:1.05;
+    letter-spacing:0;
+}
+
+.mood-calendar-header p{
+    margin:10px 0 0;
+    color:#69758d;
+}
+
+.mood-calendar-header a{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:46px;
+    padding:12px 18px;
+    color:white;
+    background:linear-gradient(135deg, #8b5cf6, #3b82f6);
+    border-radius:999px;
+    text-decoration:none;
+    font-weight:700;
+    box-shadow:0 16px 34px rgba(124,58,237,0.18);
+}
+
+.calendar-weekdays,
+.mood-calendar-grid{
+    display:grid;
+    grid-template-columns:repeat(7, minmax(0, 1fr));
+    gap:8px;
+}
+
+.calendar-weekdays{
+    margin-bottom:10px;
+}
+
+.calendar-weekdays span{
+    color:#7b86a0;
+    text-align:center;
+    font-size:0.72rem;
+    font-weight:700;
+}
+
+.calendar-day{
+    aspect-ratio:1;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:3px;
+    min-width:0;
+    border:1px solid rgba(255,255,255,0.74);
+    border-radius:18px;
+    background:rgba(255,255,255,0.5);
+    box-shadow:0 10px 24px rgba(111,124,154,0.10);
+    transition:transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.calendar-day:not(.empty):hover{
+    transform:translateY(-3px);
+    box-shadow:0 16px 34px rgba(111,124,154,0.16);
+}
+
+.calendar-day span{
+    color:#61708a;
+    font-size:0.76rem;
+    font-weight:700;
+}
+
+.calendar-day strong{
+    min-height:1.25em;
+    font-size:clamp(1rem, 4.5vw, 1.55rem);
+    line-height:1;
+}
+
+.calendar-day.empty{
+    opacity:0;
+    pointer-events:none;
+}
+
+.calendar-day.today{
+    border-color:rgba(124,58,237,0.46);
+    box-shadow:
+        0 0 0 4px rgba(167,139,250,0.12),
+        0 12px 30px rgba(124,58,237,0.16);
+}
+
+.calendar-day.has-mood.happy{
+    background:linear-gradient(135deg, rgba(220,252,231,0.92), rgba(254,249,195,0.78));
+}
+
+.calendar-day.has-mood.calm{
+    background:linear-gradient(135deg, rgba(204,251,241,0.88), rgba(219,234,254,0.78));
+}
+
+.calendar-day.has-mood.neutral{
+    background:linear-gradient(135deg, rgba(226,232,240,0.88), rgba(241,245,249,0.76));
+}
+
+.calendar-day.has-mood.sad{
+    background:linear-gradient(135deg, rgba(237,233,254,0.9), rgba(252,231,243,0.78));
+}
+
+.calendar-day.has-mood.stressed,
+.calendar-day.has-mood.angry{
+    background:linear-gradient(135deg, rgba(254,215,215,0.92), rgba(254,240,138,0.72));
+}
+
+.mood-legend{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:22px;
+}
+
+.mood-legend span{
+    display:inline-flex;
+    align-items:center;
+    gap:7px;
+    padding:10px 12px;
+    color:#465169;
+    background:rgba(255,255,255,0.56);
+    border:1px solid rgba(255,255,255,0.72);
+    border-radius:999px;
+    box-shadow:0 10px 24px rgba(111,124,154,0.10);
+    font-size:0.84rem;
+    font-weight:700;
+}
+
 .dark-mode{
     --bg:#111827;
     --surface:#1f2937;
@@ -1351,6 +1514,47 @@ li,
         0 30px 90px rgba(0,0,0,0.34);
 }
 
+.dark-mode .mood-calendar-card{
+    background:rgba(30,41,59,0.72);
+}
+
+.dark-mode .mood-calendar-shell{
+    color:var(--text);
+    background:
+        radial-gradient(circle at 18% 0%, rgba(219,39,119,0.18), transparent 17rem),
+        radial-gradient(circle at 100% 8%, rgba(14,165,233,0.18), transparent 16rem),
+        rgba(15,23,42,0.72);
+    border-color:rgba(148,163,184,0.24);
+    box-shadow:0 28px 80px rgba(0,0,0,0.32);
+}
+
+.dark-mode .mood-calendar-header h1{
+    color:var(--text);
+}
+
+.dark-mode .mood-calendar-header p,
+.dark-mode .calendar-weekdays span,
+.dark-mode .calendar-day span{
+    color:var(--muted);
+}
+
+.dark-mode .calendar-day,
+.dark-mode .mood-legend span{
+    color:var(--text);
+    background:rgba(30,41,59,0.66);
+    border-color:rgba(148,163,184,0.22);
+    box-shadow:0 14px 34px rgba(0,0,0,0.20);
+}
+
+.dark-mode .calendar-day.has-mood.happy,
+.dark-mode .calendar-day.has-mood.calm,
+.dark-mode .calendar-day.has-mood.neutral,
+.dark-mode .calendar-day.has-mood.sad,
+.dark-mode .calendar-day.has-mood.stressed,
+.dark-mode .calendar-day.has-mood.angry{
+    background:rgba(51,65,85,0.82);
+}
+
 @media (max-width:768px){
     header{
         margin:16px 14px 0;
@@ -1464,6 +1668,20 @@ li,
     .focus-controls{
         grid-template-columns:repeat(3, minmax(0, 1fr));
     }
+
+    .mood-calendar-shell{
+        padding:34px;
+    }
+
+    .mood-calendar-header{
+        grid-template-columns:1fr auto;
+        align-items:end;
+    }
+
+    .calendar-weekdays,
+    .mood-calendar-grid{
+        gap:12px;
+    }
 }
 
 @media (min-width:980px){
@@ -1485,6 +1703,10 @@ li,
 
     .focus-card{
         padding:36px;
+    }
+
+    .calendar-day{
+        border-radius:22px;
     }
 }
 
@@ -1543,5 +1765,24 @@ li,
     .focus-stats{
         grid-template-columns:1fr;
         border-radius:24px;
+    }
+
+    .mood-calendar-page{
+        width:calc(100% - 22px);
+        padding-top:86px;
+    }
+
+    .mood-calendar-shell{
+        padding:18px;
+        border-radius:26px;
+    }
+
+    .calendar-weekdays,
+    .mood-calendar-grid{
+        gap:6px;
+    }
+
+    .calendar-day{
+        border-radius:14px;
     }
 }
