@@ -255,3 +255,49 @@ function logoutUser() {
 
     window.location.href = "index.html";
 }
+function sendMessage() {
+    let input = document.getElementById("userInput").value.trim();
+    let chatBox = document.getElementById("chatBox");
+
+    if (input === "") return;
+
+    let userMessage = document.createElement("p");
+    userMessage.innerHTML = "<strong>You:</strong> " + input;
+    chatBox.appendChild(userMessage);
+
+    let botReply = getBotResponse(input);
+
+    let botMessage = document.createElement("p");
+    botMessage.innerHTML = "<strong>Bot:</strong> " + botReply;
+    chatBox.appendChild(botMessage);
+
+    document.getElementById("userInput").value = "";
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+function getBotResponse(input) {
+    input = input.toLowerCase();
+
+    if (input.includes("stress")) {
+        return "Try taking deep breaths and use the breathing exercise module.";
+    }
+
+    if (input.includes("anxiety")) {
+        return "Break tasks into smaller parts and focus on one step at a time.";
+    }
+
+    if (input.includes("sad")) {
+        return "Writing in your journal may help process your feelings.";
+    }
+
+    if (input.includes("lonely")) {
+        return "Reach out to someone you trust or use emergency support.";
+    }
+
+    if (input.includes("exam")) {
+        return "Exam pressure is normal. Plan your study time and take breaks.";
+    }
+
+    return "I am here for you. Tell me more about how you feel.";
+}

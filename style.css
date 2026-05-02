@@ -158,3 +158,11 @@ li{
 .hero p{
     font-size:20px;
 }
+.chat-box{
+    height:300px;
+    overflow-y:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
