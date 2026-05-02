@@ -170,6 +170,7 @@ function displayMoods() {
 
 window.onload = function () {
     loadTheme();
+    initializeDailyQuote();
     displayUserName();
     displayMoods();
     displayJournals();
@@ -177,6 +178,36 @@ window.onload = function () {
     loadDashboard();
     initializeSOSButton();
 };
+
+const dailyMotivationQuotes = [
+    { text: "Progress over perfection.", category: "Study motivation" },
+    { text: "Rest is productive.", category: "Mental wellness" },
+    { text: "One step at a time.", category: "Resilience" },
+    { text: "Small progress is still progress.", category: "Focus" },
+    { text: "You can pause without giving up.", category: "Stress management" },
+    { text: "A calm mind learns better.", category: "Study motivation" },
+    { text: "Breathe first, solve second.", category: "Stress management" },
+    { text: "Consistency grows quietly.", category: "Focus" },
+    { text: "Today only needs your next kind choice.", category: "Mental wellness" },
+    { text: "You have handled hard days before.", category: "Resilience" }
+];
+
+function initializeDailyQuote() {
+    const quoteElements = document.querySelectorAll("[data-daily-quote]");
+
+    if (quoteElements.length === 0) return;
+
+    const selectedQuote = dailyMotivationQuotes[Math.floor(Math.random() * dailyMotivationQuotes.length)];
+    const categoryElements = document.querySelectorAll("[data-daily-quote-category]");
+
+    quoteElements.forEach(function(element) {
+        element.innerText = selectedQuote.text;
+    });
+
+    categoryElements.forEach(function(element) {
+        element.innerText = selectedQuote.category;
+    });
+}
 
 let breathingInterval;
 let countdownInterval;
